@@ -26,4 +26,6 @@
 <string name="vnime_settings_key_feedback_sound">vnime_settings_key_feedback_sound</string>
 <string name="vnime_settings_key_feedback_vibration">vnime_settings_key_feedback_vibration</string>
 
+<string name="vnime_settings_key_about">vnime_settings_key_about</string>
+
 </resources>

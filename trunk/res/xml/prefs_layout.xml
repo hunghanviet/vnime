@@ -104,4 +104,16 @@
 	            />
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/vnime_settings_about"
+            android:key="@string/vnime_settings_key_about">
+
+	    <org.ime.vnime.view.AboutScreen
+	    		android:key="@string/vnime_settings_key_about"
+	    		android:title="@string/vnime_settings_about"
+	    		/>
+
+    </PreferenceCategory>
+    
 </PreferenceScreen>

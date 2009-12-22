@@ -23,6 +23,8 @@
 <string name="vnime_settings_feedback_visual">Visual feedback</string>
 <string name="vnime_settings_feedback_sound">Sound feedback</string>
 <string name="vnime_settings_feedback_vibration">Vibration feedback</string>
+
+<string name="vnime_settings_about">About...</string>
 -->
 
 <string name="vnime_settings_showsoftkeyboard">Hiển thị bàn phím ảo</string>
@@ -47,5 +49,7 @@
 <string name="vnime_settings_feedback_visual">Hiển thị</string>
 <string name="vnime_settings_feedback_sound">Âm thanh</string>
 <string name="vnime_settings_feedback_vibration">Rung</string>
+
+<string name="vnime_settings_about">Giới thiệu</string>
 
 </resources>
