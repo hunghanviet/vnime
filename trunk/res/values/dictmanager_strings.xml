@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--
+<string name="dictmanager_label_word">Word</string>
+<string name="dictmanager_label_add">Add</string>
+<string name="dictmanager_label_delete">Delete</string>
+-->
+<string name="dictmanager_label_word">Mục từ</string>
+<string name="dictmanager_label_add">Thêm</string>
+<string name="dictmanager_label_delete">Xoá</string>
+</resources>

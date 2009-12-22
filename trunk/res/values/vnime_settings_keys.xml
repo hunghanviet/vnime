@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<string name="vnime_settings_key">vnime_settings_key</string>
+
+<string name="vnime_settings_key_showsoftkeyboard">vnime_settings_key_showsoftkeyboard</string>
+<string name="vnime_settings_key_typingmethod">vnime_settings_key_typingmethod</string>
+<string name="vnime_settings_key_autocapsentences">vnime_settings_key_autocapsentences</string>
+
+<string name="vnime_settings_key_suggestion">vnime_settings_key_suggestion</string>
+<string name="vnime_settings_key_showsuggestion">vnime_settings_key_showsuggestion</string>
+<string name="vnime_settings_key_dictionary_manager">vnime_settings_key_dictionary_manager</string>
+
+<string name="vnime_settings_key_macro">vnime_settings_key_macro</string>
+<string name="vnime_settings_key_macro_manager">vnime_settings_key_macro_manager</string>
+<string name="vnime_settings_key_macro_enable">vnime_settings_key_macro_enable</string>
+
+<string name="vnime_settings_key_spellcheck">vnime_settings_key_spellcheck</string>
+<string name="vnime_settings_key_spellcheck_enable">vnime_settings_key_spellcheck_enable</string>
+<string name="vnime_settings_key_spellcheck_enable_summary">vnime_settings_key_spellcheck_enable_summary</string>
+<string name="vnime_settings_key_spellcheck_revert">vnime_settings_key_spellcheck_revert</string>
+<string name="vnime_settings_key_spellcheck_revert_summary">vnime_settings_key_spellcheck_revert_summary</string>
+
+<string name="vnime_settings_key_feedback">vnime_settings_key_feedback</string>
+<string name="vnime_settings_key_feedback_visual">vnime_settings_key_feedback_visual</string>
+<string name="vnime_settings_key_feedback_sound">vnime_settings_key_feedback_sound</string>
+<string name="vnime_settings_key_feedback_vibration">vnime_settings_key_feedback_vibration</string>
+
+</resources>

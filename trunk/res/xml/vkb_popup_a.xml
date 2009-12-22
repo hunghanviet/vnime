@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="10%p"
+    android:horizontalGap="0px"
+    android:verticalGap="0px"
+    android:keyHeight="@dimen/key_height"
+    >
+    <Row>
+        <Key android:codes="97" android:keyLabel="a"/>
+        <Key android:codes="224" android:keyLabel="à"/>
+        <Key android:codes="225" android:keyLabel="á"/>
+        <Key android:codes="7843" android:keyLabel="ả"/>
+        <Key android:codes="227" android:keyLabel="ã"/>
+        <Key android:codes="7841" android:keyLabel="ạ"/>
+    </Row>
+    <Row>
+        <Key android:codes="259" android:keyLabel="ă"/>
+        <Key android:codes="7857" android:keyLabel="ằ"/>
+        <Key android:codes="7855" android:keyLabel="ắ"/>
+        <Key android:codes="7859" android:keyLabel="ẳ"/>
+        <Key android:codes="7861" android:keyLabel="ẵ"/>
+        <Key android:codes="7863" android:keyLabel="ặ"/>
+    </Row>
+    <Row>
+        <Key android:codes="226" android:keyLabel="â"/>
+        <Key android:codes="7847" android:keyLabel="ầ"/>
+        <Key android:codes="7845" android:keyLabel="ấ"/>
+        <Key android:codes="7849" android:keyLabel="ẩ"/>
+        <Key android:codes="7851" android:keyLabel="ẫ"/>
+        <Key android:codes="7853" android:keyLabel="ậ"/>
+    </Row>
+</Keyboard>

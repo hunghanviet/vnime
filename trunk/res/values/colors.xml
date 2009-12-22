@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<color name="svc_candidate_background">#ffffff</color>
+<color name="svc_candidate_foreground">#000000</color>
+<color name="svc_candidate_foreground_macro">#ff0000</color>
+</resources>

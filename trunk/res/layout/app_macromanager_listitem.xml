@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_height="wrap_content" android:orientation="vertical" android:layout_width="fill_parent">
+<TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:textStyle="bold" android:text="Key" android:id="@+id/macromanager_listitem_lbKey" android:lines="1"></TextView>
+<TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Value" android:lines="1" android:id="@+id/macromanager_listitem_lbValue"></TextView>
+</LinearLayout>
