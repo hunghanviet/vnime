@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent" android:layout_width="fill_parent"
+	android:gravity="center" android:orientation="vertical">
+	<TextView android:layout_height="wrap_content" android:text="VnIme"
+		android:textStyle="bold" android:textSize="32px" android:textColor="#ffff00"
+		android:layout_width="fill_parent" android:gravity="center"></TextView>
+	<TextView android:layout_height="wrap_content" android:text="Vietnamese IME"
+		android:textSize="20px" android:gravity="center" android:layout_width="fill_parent"></TextView>
+	<TextView android:layout_height="wrap_content" android:text="Version 1.0 beta 2"
+		android:layout_width="fill_parent" android:gravity="center"></TextView>
+	<TextView android:layout_height="wrap_content" android:text="© 2009 Đỗ Trung Nguyên"
+		android:gravity="center" android:layout_width="fill_parent"></TextView>
+
+	<LinearLayout android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+		<LinearLayout android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:orientation="vertical">
+			<TextView android:text="Author:" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></TextView>
+			<TextView android:text="Homepage:" android:layout_width="wrap_content"
+				android:layout_height="wrap_content"></TextView>
+		</LinearLayout>
+		<LinearLayout android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:orientation="vertical"
+			android:layout_marginLeft="16px">
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="do.trungnguyen@gmail.com"
+				android:autoLink="email"></TextView>
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="http://code.google.com/p/vnime"
+				android:autoLink="web"></TextView>
+		</LinearLayout>
+	</LinearLayout>
+
+</LinearLayout>
