@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="macromanager_label_key">Thay thế</string>
+<string name="macromanager_label_value">Bởi</string>
+<string name="macromanager_label_update">Cập nhật</string>
+<string name="macromanager_label_add">Thêm mới</string>
+<string name="macromanager_label_menuitem_delete">Xoá</string>
+</resources>

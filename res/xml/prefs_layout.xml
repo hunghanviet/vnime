@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        android:title="@string/app_name"
+        android:key="vnime_settings">
+
+    <CheckBoxPreference
+            android:key="@string/vnime_settings_key_showsoftkeyboard"
+            android:title="@string/vnime_settings_showsoftkeyboard"
+            android:persistent="true" android:defaultValue="true"
+            />
+
+    <ListPreference
+            android:key="@string/vnime_settings_key_typingmethod"
+            android:title="@string/vnime_settings_typingmethod"
+            android:entries="@array/typingmethod_name"
+            android:entryValues="@array/typingmethod_modifiers"
+            android:persistent="true"
+            />
+
+    <CheckBoxPreference
+            android:key="@string/vnime_settings_key_autocapsentences"
+            android:title="@string/vnime_settings_autocapsentences"
+            android:persistent="true" android:defaultValue="true"
+            />
+
+    <PreferenceCategory
+            android:title="@string/vnime_settings_suggestion"
+            android:key="@string/vnime_settings_key_suggestion">
+
+	    <CheckBoxPreference
+	            android:key="@string/vnime_settings_key_showsuggestion"
+	            android:title="@string/vnime_settings_showsuggestion"
+	            android:persistent="true" android:defaultValue="true"
+	            />
+
+	    <org.ime.vnime.view.UserDictPreferenceSceen
+	    		android:key="@string/vnime_settings_key_dictionary_manager"
+	    		android:title="@string/vnime_settings_dictionary_manager"
+	    		/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/vnime_settings_spellcheck"
+            android:key="@string/vnime_settings_key_spellcheck">
+
+        <CheckBoxPreference
+            android:key="@string/vnime_settings_key_spellcheck_enable"
+            android:title="@string/vnime_settings_spellcheck_enable"
+            android:summary="@string/vnime_settings_spellcheck_enable_summary"
+            android:enabled="false" android:persistent="true"
+            android:defaultValue="false"
+            />
+
+        <CheckBoxPreference
+            android:key="@string/vnime_settings_key_spellcheck_revert"
+            android:dependency="@string/vnime_settings_key_spellcheck_enable"
+            android:title="@string/vnime_settings_spellcheck_revert"
+            android:summary="@string/vnime_settings_spellcheck_revert_summary"
+            android:persistent="true" android:defaultValue="true"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/vnime_settings_macro"
+            android:key="@string/vnime_settings_key_macro">
+
+	    <CheckBoxPreference
+	            android:key="@string/vnime_settings_key_macro_enable"
+	            android:title="@string/vnime_settings_macro_enable"
+	            android:persistent="true" android:defaultValue="true"
+	            />
+
+	    <org.ime.vnime.view.MacroPreferenceScreen
+	    		android:key="@string/vnime_settings_key_macro_manager"
+	    		android:dependency="@string/vnime_settings_key_macro_enable"
+	    		android:title="@string/vnime_settings_macro_manager"
+	    		/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/vnime_settings_feedback"
+            android:key="@string/vnime_settings_key_feedback">
+
+	    <CheckBoxPreference
+	            android:key="@string/vnime_settings_key_feedback_visual"
+	            android:title="@string/vnime_settings_feedback_visual"
+	            android:persistent="true" android:defaultValue="true"
+	            />
+
+	    <CheckBoxPreference
+	            android:key="@string/vnime_settings_key_feedback_sound"
+	            android:title="@string/vnime_settings_feedback_sound"
+	            android:persistent="true" android:defaultValue="false"
+	            />
+
+	    <CheckBoxPreference
+	            android:key="@string/vnime_settings_key_feedback_vibration"
+	            android:title="@string/vnime_settings_feedback_vibration"
+	            android:persistent="true" android:defaultValue="false"
+	            />
+
+    </PreferenceCategory>
+</PreferenceScreen>

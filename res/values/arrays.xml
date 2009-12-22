@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="typingmethod_name">
+<item>Telex</item>
+<item>VNI</item>
+<item>VIRQ</item>
+</string-array>
+<string-array name="typingmethod_modifiers">
+<item>zfsrxjwadeoww</item>
+<item>0213458696677</item>
+<item>-`\'?~.(^d^^++</item>
+</string-array>
+</resources>

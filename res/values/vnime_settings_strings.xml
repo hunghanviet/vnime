@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--
+<string name="vnime_settings_showsoftkeyboard">Show virtual keyboard</string>
+<string name="vnime_settings_typingmethod">Typing method</string>
+<string name="vnime_settings_autocapsentences">Auto capitalize sentences</string>
+
+<string name="vnime_settings_suggestion">Text suggestion</string>
+<string name="vnime_settings_showsuggestion">Show suggestion</string>
+<string name="vnime_settings_dictionary_manager">User dictionary</string>
+
+<string name="vnime_settings_macro">Macro options</string>
+<string name="vnime_settings_macro_enable">Enable macros</string>
+<string name="vnime_settings_macro_manager">Manage macros</string>
+
+<string name="vnime_settings_spellcheck">Spell checking</string>
+<string name="vnime_settings_spellcheck_enable">Check spelling</string>
+<string name="vnime_settings_spellcheck_enable_summary">Check spelling and don\'t put tone or mark if spelling is wrong</string>
+<string name="vnime_settings_spellcheck_revert">Revert on wrong spelling</string>
+<string name="vnime_settings_spellcheck_revert_summary">Automatically revert the word to original sequence if spelling is wrong</string>
+
+<string name="vnime_settings_feedback">Virtual keyboard feedback</string>
+<string name="vnime_settings_feedback_visual">Visual feedback</string>
+<string name="vnime_settings_feedback_sound">Sound feedback</string>
+<string name="vnime_settings_feedback_vibration">Vibration feedback</string>
+-->
+
+<string name="vnime_settings_showsoftkeyboard">Hiển thị bàn phím ảo</string>
+<string name="vnime_settings_typingmethod">Chọn bộ gõ</string>
+<string name="vnime_settings_autocapsentences">Viết hoa chữ đầu câu</string>
+
+<string name="vnime_settings_suggestion">Dự đoán từ</string>
+<string name="vnime_settings_showsuggestion">Hiển thị các từ dự đoán</string>
+<string name="vnime_settings_dictionary_manager">Từ điển người dùng</string>
+
+<string name="vnime_settings_macro">Hỗ trợ viết tắt</string>
+<string name="vnime_settings_macro_enable">Cho phép viết tắt</string>
+<string name="vnime_settings_macro_manager">Quản lý các từ viết tắt</string>
+
+<string name="vnime_settings_spellcheck">Kiểm tra chính tả</string>
+<string name="vnime_settings_spellcheck_enable">Kiểm tra chính tả khi viết</string>
+<string name="vnime_settings_spellcheck_enable_summary">Không bỏ dấu vào những từ sai chính tả</string>
+<string name="vnime_settings_spellcheck_revert">Khôi phục phím khi sai chính tả</string>
+<string name="vnime_settings_spellcheck_revert_summary">Tự động khôi phục chuỗi ký tự gốc khi sai chính tả</string>
+
+<string name="vnime_settings_feedback">Phản hồi trên bàn phím ảo</string>
+<string name="vnime_settings_feedback_visual">Hiển thị</string>
+<string name="vnime_settings_feedback_sound">Âm thanh</string>
+<string name="vnime_settings_feedback_vibration">Rung</string>
+
+</resources>

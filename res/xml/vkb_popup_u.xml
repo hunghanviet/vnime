@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="10%p"
+    android:horizontalGap="0px"
+    android:verticalGap="0px"
+    android:keyHeight="@dimen/key_height"
+    >
+    <Row>
+        <Key android:codes="117" android:keyLabel="u"/>
+        <Key android:codes="249" android:keyLabel="ù"/>
+        <Key android:codes="250" android:keyLabel="ú"/>
+        <Key android:codes="7911" android:keyLabel="ủ"/>
+        <Key android:codes="361" android:keyLabel="ũ"/>
+        <Key android:codes="7909" android:keyLabel="ụ"/>
+    </Row>
+    <Row>
+        <Key android:codes="432" android:keyLabel="ư"/>
+        <Key android:codes="7915" android:keyLabel="ừ"/>
+        <Key android:codes="7913" android:keyLabel="ứ"/>
+        <Key android:codes="7917" android:keyLabel="ử"/>
+        <Key android:codes="7919" android:keyLabel="ữ"/>
+        <Key android:codes="7921" android:keyLabel="ự"/>
+    </Row>
+</Keyboard>

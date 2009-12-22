@@ -1,0 +1,40 @@
+KeyEvent:
+	if key is a char:
+		if char is a modifier:
+			if current word has invalid structure:
+				put_char;
+			else:
+				if modifier is a tone:
+					if tone is different with current tone:
+						if put_tone makes a valid vowel:
+							put_tone;
+						else:
+							put_char;
+					else:
+						remove_tone;
+						put_char;
+				else: // modifier is a mark
+					if mark is different with current mark:
+						if put_mark makes a valid vowel:
+							put_mark;
+						else:
+							put_char;
+					else:
+						remove_mark;
+						put_char;
+		else
+			if char is a delimiter:
+				if (macro is enabled) and (current word is a macro):
+					expand_macro;
+				else if (revert is enabled) and (current word is not a valid Vietnamese word):
+					revert_word;
+			put_char;
+		update_revert_buffer;
+		update_candidate_view;
+	else: // DPAD, ALT, SHIFT, SYM, NUM, DELETE
+		if key is ALT or SHIFT:
+			process_alt_shift;
+		else:
+			reset_revert_buffer;
+			update_candidate_view;
+			return false; // allow system to process it

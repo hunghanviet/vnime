@@ -1,0 +1,7 @@
+- Fix bug: Updating of candidate view and input view delayed when press arrow keys and delete key on hard keyboard
+- Add: gesture actions
+- Fix bug: visual feedback not show up
+- Add: configure sound feedback volume and vibration feedback duration
+- Improvement: Correctly behavior in landscape mode
+- Add: allow select text with DPAD arrow keys
+- Improvement: dictionary search

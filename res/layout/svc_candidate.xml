@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- org.ime.vnime.view.CandidateView -->
+<org.ime.vnime.view.CandidateView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content" android:layout_width="fill_parent"
+	android:background="@drawable/img_candidate_view_background">
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:padding="@dimen/candidateview_item_padding"
+		android:background="@drawable/img_candidate_item_background"
+		android:text="Macro" android:textStyle="bold"
+		android:textColor="@color/svc_candidate_foreground_macro" android:tag="txtMacro"
+		android:lines="1" />
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:padding="@dimen/candidateview_item_padding"
+		android:textColor="@color/svc_candidate_foreground"
+		android:background="@drawable/img_candidate_item_background"
+		android:text="Word" android:tag="txtWord" android:lines="1" />
+</org.ime.vnime.view.CandidateView>

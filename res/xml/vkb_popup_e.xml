@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="10%p"
+    android:horizontalGap="0px"
+    android:verticalGap="0px"
+    android:keyHeight="@dimen/key_height"
+    >
+    <Row>
+        <Key android:codes="101" android:keyLabel="e"/>
+        <Key android:codes="232" android:keyLabel="è"/>
+        <Key android:codes="233" android:keyLabel="é"/>
+        <Key android:codes="7867" android:keyLabel="ẻ"/>
+        <Key android:codes="7869" android:keyLabel="ẽ"/>
+        <Key android:codes="7865" android:keyLabel="ẹ"/>
+    </Row>
+    <Row>
+        <Key android:codes="234" android:keyLabel="ê"/>
+        <Key android:codes="7873" android:keyLabel="ề"/>
+        <Key android:codes="7871" android:keyLabel="ế"/>
+        <Key android:codes="7875" android:keyLabel="ể"/>
+        <Key android:codes="7877" android:keyLabel="ễ"/>
+        <Key android:codes="7879" android:keyLabel="ệ"/>
+    </Row>
+</Keyboard>

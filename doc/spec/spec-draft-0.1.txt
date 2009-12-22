@@ -1,0 +1,32 @@
+VnIme Functional Specification:
+
+1. Service:
+- Have its own soft keyboard
+- Accept input from both hard and soft keyboards simutaneously
+- Have at least Vietnamese's Telex typing scheme
+- Allow show/hide soft keyboard. When hiding soft keyboard, process input from hard keyboard
+- Auto-completion
+- Auto-text (macro)
+- Auto-revert if word is not found in any dictionary
+
+2. Setting application
+- Set default typing scheme
+- Set show/hide soft keyboard
+- Enable/disable auto-completion
+- Edit user dictionary
+- Enable/disable auto-text
+- Edit macro table
+- Enable/disable auto-revert
+
+
+VnIme GUI Specification
+
+- Has different keyboard layout depend on current input mode (number, text...)
+- Allow switching keyboard layout
+- Don't display suggestion list if it is disabled or there is no suggestion
+
+
+VnIme Operational Specification
+
+- Clicking on a key on soft keyboard and hard keyboard has no difference.
+- Allow select suggested words by touch or keypad (arrow keys)
