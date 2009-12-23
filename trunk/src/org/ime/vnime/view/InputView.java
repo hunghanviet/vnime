@@ -22,6 +22,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,6 +30,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
 public class InputView extends KeyboardView {
+
+    @Override
+    public void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        Log.e("ngnTest", "NewSize = (" + w + ", " + h + "), OldSize = (" + oldw + ", " + oldh + ")");
+    }
 	
 	public enum CapModes {
 		NONE,
@@ -113,7 +120,7 @@ public class InputView extends KeyboardView {
 				break;
 			case SENTENCES:
 			case WORDS:
-				if (capMode == mode) {
+				if (capMode == mode && stateShift != MetaKeyStates.LOCK) {
 					changeShiftState(MetaKeyStates.ON);
 				}
 				break;
@@ -126,6 +133,25 @@ public class InputView extends KeyboardView {
 		}
 	}
 	
+	private KeyboardModes detectQwertyKeyboardMode() {
+		Context ctx = getContext();
+		KeyboardModes mode = KeyboardModes.QWERTY;
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String modifiers = sp.getString(ctx.getString(R.string.vnime_settings_key_typingmethod), null);
+		if (modifiers != null) {
+			int len = modifiers.length();
+			char ch;
+			for (int i = 0; i < len; i++) {
+				ch = modifiers.charAt(i);
+				if (ch >= '0' && ch <= '9') {
+					mode = KeyboardModes.QWERTY_NUMBER;
+					break;
+				}
+			}
+		}
+		return mode;
+	}
+	
 	private KeyboardModes detectKeyboardMode(EditorInfo info) {
 		KeyboardModes mode = KeyboardModes.QWERTY;
 		if (info != null) {
@@ -136,21 +162,7 @@ public class InputView extends KeyboardView {
 				mode = KeyboardModes.PHONE;
 				break;
 			case InputType.TYPE_CLASS_TEXT:
-				Context ctx = getContext();
-				mode = KeyboardModes.QWERTY;
-				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
-				String modifiers = sp.getString(ctx.getString(R.string.vnime_settings_key_typingmethod), null);
-				if (modifiers != null) {
-					int len = modifiers.length();
-					char ch;
-					for (int i = 0; i < len; i++) {
-						ch = modifiers.charAt(i);
-						if (ch >= '0' && ch <= '9') {
-							mode = KeyboardModes.QWERTY_NUMBER;
-							break;
-						}
-					}
-				}
+				mode = detectQwertyKeyboardMode();
 				break;
 			}
 		}
@@ -189,6 +201,7 @@ public class InputView extends KeyboardView {
 		case KeyEvent.KEYCODE_SHIFT_RIGHT:
 			switch (currentKeyboardMode) {
 			case QWERTY:
+			case QWERTY_NUMBER:
 				switch (stateShift) {
 				case ON:
 					changeShiftState(MetaKeyStates.LOCK);
@@ -270,6 +283,7 @@ public class InputView extends KeyboardView {
 		case VnKeyboard.KEYCODE_MODE_CHANGE:
 			switch (currentKeyboardMode) {
 			case QWERTY:
+			case QWERTY_NUMBER:
 				changeKeyboardMode(KeyboardModes.QWERTY_SYMBOLS);
 				if (stateShift == MetaKeyStates.ON)
 					stateShift = MetaKeyStates.OFF;
@@ -277,7 +291,7 @@ public class InputView extends KeyboardView {
 				break;
 			case QWERTY_SYMBOLS:
 			case QWERTY_SYMBOLS_SHIFTED:
-				changeKeyboardMode(KeyboardModes.QWERTY);
+				changeKeyboardMode(detectQwertyKeyboardMode());
 				break;
 			case PHONE:
 				changeKeyboardMode(KeyboardModes.PHONE_SYMBOLS);
