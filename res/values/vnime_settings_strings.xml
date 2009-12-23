@@ -2,7 +2,10 @@
 <resources>
 <!--
 <string name="vnime_settings_showsoftkeyboard">Show virtual keyboard</string>
+<string name="vnime_settings_showsoftkeyboard_always">Always show virtual keyboard</string>
+<string name="vnime_settings_showsoftkeyboard_always_summary">Show virtual keyboard even if hard keyboard exists and is being opened</string>
 <string name="vnime_settings_typingmethod">Typing method</string>
+<string name="vnime_settings_typingmethod_summary">"Current method: "</string>
 <string name="vnime_settings_autocapsentences">Auto capitalize sentences</string>
 
 <string name="vnime_settings_suggestion">Text suggestion</string>
@@ -20,15 +23,20 @@
 <string name="vnime_settings_spellcheck_revert_summary">Automatically revert the word to original sequence if spelling is wrong</string>
 
 <string name="vnime_settings_feedback">Virtual keyboard feedback</string>
-<string name="vnime_settings_feedback_visual">Visual feedback</string>
-<string name="vnime_settings_feedback_sound">Sound feedback</string>
-<string name="vnime_settings_feedback_vibration">Vibration feedback</string>
+<string name="vnime_settings_feedback_visual">Visual</string>
+<string name="vnime_settings_feedback_sound">Sound</string>
+<string name="vnime_settings_feedback_sound_volume">Sound volume</string>
+<string name="vnime_settings_feedback_vibration">Vibration</string>
+<string name="vnime_settings_feedback_vibration_duration">Vibration duration</string>
 
 <string name="vnime_settings_about">About...</string>
 -->
 
 <string name="vnime_settings_showsoftkeyboard">Hiển thị bàn phím ảo</string>
+<string name="vnime_settings_showsoftkeyboard_always">Luôn hiện bàn phím ảo</string>
+<string name="vnime_settings_showsoftkeyboard_always_summary">Hiển thị bàn phím ảo ngay cả khi bàn phím thật đang được mở</string>
 <string name="vnime_settings_typingmethod">Chọn bộ gõ</string>
+<string name="vnime_settings_typingmethod_summary">"Bộ gõ hiện tại: "</string>
 <string name="vnime_settings_autocapsentences">Viết hoa chữ đầu câu</string>
 
 <string name="vnime_settings_suggestion">Dự đoán từ</string>
@@ -46,9 +54,11 @@
 <string name="vnime_settings_spellcheck_revert_summary">Tự động khôi phục chuỗi ký tự gốc khi sai chính tả</string>
 
 <string name="vnime_settings_feedback">Phản hồi trên bàn phím ảo</string>
-<string name="vnime_settings_feedback_visual">Hiển thị</string>
+<string name="vnime_settings_feedback_visual">Hình ảnh</string>
 <string name="vnime_settings_feedback_sound">Âm thanh</string>
+<string name="vnime_settings_feedback_sound_volume">Âm lượng</string>
 <string name="vnime_settings_feedback_vibration">Rung</string>
+<string name="vnime_settings_feedback_vibration_duration">Thời gian rung</string>
 
 <string name="vnime_settings_about">Giới thiệu</string>
 

@@ -8,6 +8,14 @@
             android:key="@string/vnime_settings_key_showsoftkeyboard"
             android:title="@string/vnime_settings_showsoftkeyboard"
             android:persistent="true" android:defaultValue="true"
+            android:enabled="false"
+            />
+
+    <CheckBoxPreference
+            android:key="@string/vnime_settings_key_showsoftkeyboard_always"
+            android:title="@string/vnime_settings_showsoftkeyboard_always"
+            android:summary="@string/vnime_settings_showsoftkeyboard_always_summary"
+            android:persistent="true" android:defaultValue="false"
             />
 
     <ListPreference
@@ -15,7 +23,7 @@
             android:title="@string/vnime_settings_typingmethod"
             android:entries="@array/typingmethod_name"
             android:entryValues="@array/typingmethod_modifiers"
-            android:persistent="true"
+            android:persistent="true" android:defaultValue="@string/modifiers_telex"
             />
 
     <CheckBoxPreference

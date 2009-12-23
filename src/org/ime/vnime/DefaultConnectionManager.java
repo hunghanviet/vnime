@@ -28,6 +28,8 @@ public class DefaultConnectionManager implements ConnectionManager {
 		context = ctx;
 		connection = conn;
 		
+		modifiers = context.getString(R.string.modifiers_telex);
+		
 		txtProcessor = TxtProcFactory.getInstance(context).createTextProcessor(TxtProcFactory.ID_TXTPROCESSOR_MEMORY);
 	}
 	
@@ -36,11 +38,11 @@ public class DefaultConnectionManager implements ConnectionManager {
 	static private final int MODIFIER_STRING_LEN = 13;
 	static private final int TONES_COUNT = 6;
 	
-	static private final String MODIFIER_TELEX = "zfsrxjwadeoww";
-	
 	private static final int MSGID_NOTIFY_TEXT_CHANGED = 20;
+	private static final int MSGID_CHECK_NEW_WORD = 30;
+	private static final int NOTIFICATION_DELAY = 80;   /* Count in ms */
 
-	private String modifiers = MODIFIER_TELEX;
+	private String modifiers;
 	
 	private Context context; 
 	private InputConnection connection;
@@ -67,6 +69,31 @@ public class DefaultConnectionManager implements ConnectionManager {
 					textChangedListener.onTextChanged(text);
 				}
 				break;
+			case MSGID_CHECK_NEW_WORD:
+				CharSequence text = connection.getTextBeforeCursor(MAX_WORD_LEN, 0);
+				if (text != null) {
+					int len = text.length();
+					if (len > 0) {
+						for (int i = len - 1; i >= 0; i--) {
+							char ch = text.charAt(i);
+							if (!Character.isWhitespace(ch)) {
+								if (i < len - 1) {
+									/* There is at least one whitespace before the cursor */
+									textChangedListener.onNewWord();
+								}
+								if (txtProcessor.isPunctuation(ch)) {
+									/* We're starting a new sentence */
+									textChangedListener.onNewSentence();
+								}
+								break;
+							}
+						}
+					} else {
+						textChangedListener.onNewWord();
+						textChangedListener.onNewSentence();
+					}
+				}
+				break;
 			}
 		}
 	};
@@ -81,9 +108,7 @@ public class DefaultConnectionManager implements ConnectionManager {
 		connection = conn;
 		inDirtyState = true;
 
-		if (!msgHandler.hasMessages(MSGID_NOTIFY_TEXT_CHANGED))
-			msgHandler.sendEmptyMessage(MSGID_NOTIFY_TEXT_CHANGED);
-		checkNewWord();
+		notifyTextChanged();
 	}
 
 	@Override
@@ -91,7 +116,7 @@ public class DefaultConnectionManager implements ConnectionManager {
 		if (modifiers != null && modifiers.length() == MODIFIER_STRING_LEN) {
 			this.modifiers = modifiers;
 		} else if (modifiers == null) {
-			this.modifiers = MODIFIER_TELEX;	/* Default is Telex */
+			this.modifiers = context.getString(R.string.modifiers_telex);	/* Default is Telex */
 		} else {
 			throw new InvalidParameterException("Invalid modifiers sequence!");
 		}
@@ -183,7 +208,6 @@ public class DefaultConnectionManager implements ConnectionManager {
 		} else {
 			/* If nothing special happened, simply put the char in */
 			connection.commitText("" + c, 1);
-			checkNewWord();
 		}
 
 		inDirtyState = true;
@@ -232,8 +256,7 @@ public class DefaultConnectionManager implements ConnectionManager {
 				}
 			}
 
-			if (!msgHandler.hasMessages(MSGID_NOTIFY_TEXT_CHANGED))
-				msgHandler.sendEmptyMessage(MSGID_NOTIFY_TEXT_CHANGED);
+			notifyTextChanged();
 			
 			return true;
 		} else {
@@ -247,10 +270,7 @@ public class DefaultConnectionManager implements ConnectionManager {
 				inDirtyState = true;
 				if (connection != null) {
 					connection.sendKeyEvent(event);
-					// TODO Check if key event is really processed
-					if (!msgHandler.hasMessages(MSGID_NOTIFY_TEXT_CHANGED))
-						msgHandler.sendEmptyMessage(MSGID_NOTIFY_TEXT_CHANGED);
-					checkNewWord();
+					notifyTextChanged();
 				}
 				return true;
 			}
@@ -330,32 +350,13 @@ public class DefaultConnectionManager implements ConnectionManager {
 	/**
 	 * Check if we're starting a new word and/or a new sentence
 	 */
-	private void checkNewWord() {
+	private void notifyTextChanged() {
 		if (connection == null)
 			return;
-		CharSequence text = connection.getTextBeforeCursor(MAX_WORD_LEN, 0);
-		if (text != null) {
-			int len = text.length();
-			if (len > 0) {
-				for (int i = len - 1; i >= 0; i--) {
-					char ch = text.charAt(i);
-					if (!Character.isWhitespace(ch)) {
-						if (i < len - 1) {
-							/* There is at least one whitespace before the cursor */
-							textChangedListener.onNewWord();
-						}
-						if (txtProcessor.isPunctuation(ch)) {
-							/* We're starting a new sentence */
-							textChangedListener.onNewSentence();
-						}
-						break;
-					}
-				}
-			} else {
-				textChangedListener.onNewWord();
-				textChangedListener.onNewSentence();
-			}
-		}
+		if (!msgHandler.hasMessages(MSGID_NOTIFY_TEXT_CHANGED))
+			msgHandler.sendEmptyMessageDelayed(MSGID_NOTIFY_TEXT_CHANGED, NOTIFICATION_DELAY);
+		if (!msgHandler.hasMessages(MSGID_CHECK_NEW_WORD))
+			msgHandler.sendEmptyMessageDelayed(MSGID_CHECK_NEW_WORD, NOTIFICATION_DELAY);
 	}
 
 	@Override
@@ -370,9 +371,7 @@ public class DefaultConnectionManager implements ConnectionManager {
 				connection.deleteSurroundingText(curLen, 0);
 				connection.commitText(text + " ", 1);
 				inDirtyState = true;
-				if (!msgHandler.hasMessages(MSGID_NOTIFY_TEXT_CHANGED))
-					msgHandler.sendEmptyMessage(MSGID_NOTIFY_TEXT_CHANGED);
-				checkNewWord();
+				notifyTextChanged();
 			}
 			return true;
 		case SELF_PRODUCE:
@@ -382,9 +381,7 @@ public class DefaultConnectionManager implements ConnectionManager {
 				connection.deleteSurroundingText(curLen, 0);
 				connection.commitText(text, 1);
 				inDirtyState = true;
-				if (!msgHandler.hasMessages(MSGID_NOTIFY_TEXT_CHANGED))
-					msgHandler.sendEmptyMessage(MSGID_NOTIFY_TEXT_CHANGED);
-				checkNewWord();
+				notifyTextChanged();
 			}
 			return true;
 		}

@@ -12,9 +12,11 @@ import org.ime.vnime.view.InputView.CapModes;
 import android.content.SharedPreferences;
 import android.inputmethodservice.InputMethodService;
 import android.preference.PreferenceManager;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 
 /**
@@ -26,7 +28,7 @@ public class VnIme extends InputMethodService {
 
 	@Override
 	public boolean onEvaluateInputViewShown() {
-		return showInputView && super.onEvaluateInputViewShown();
+		return (showInputView && super.onEvaluateInputViewShown()) || showInputViewAlways;
 	}
 
 	@Override
@@ -44,7 +46,9 @@ public class VnIme extends InputMethodService {
 			
 			@Override
 			public void onTextChanged(CharSequence newText) {
-				if (showCandidateView) {
+		        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+				if (showCandidateView &&
+						(display.getHeight()*MAX_OCCUPIED_SCREEN/100 >= viewInput.getHeight() + viewCandidate.getHeight())) {
 					String text;
 					if (newText != null && (text = newText.toString()).trim().length() > 0) {
 						if (dictManager.checkCandidateExist(text, null) || macroManager.checkMacroExist(text)) {
@@ -101,6 +105,8 @@ public class VnIme extends InputMethodService {
 		}
 	}
 	
+	private static final int MAX_OCCUPIED_SCREEN = 75;    /* In percentage */
+	
 	private ConnectionManager connManager;
 	
 	private DictionaryManager dictManager;
@@ -110,6 +116,7 @@ public class VnIme extends InputMethodService {
 	private InputView viewInput;
 	
 	private boolean showInputView = true;
+	private boolean showInputViewAlways = false;
 	private boolean showCandidateView = false;
 	
 	/**
@@ -123,6 +130,7 @@ public class VnIme extends InputMethodService {
 		connManager.setRevertEnabled(sp.getBoolean(getString(R.string.vnime_settings_key_spellcheck_revert), true));
 
 		showInputView = sp.getBoolean(getString(R.string.vnime_settings_key_showsoftkeyboard), showInputView);
+		showInputViewAlways = sp.getBoolean(getString(R.string.vnime_settings_key_showsoftkeyboard_always), showInputViewAlways);
 		showCandidateView = sp.getBoolean(getString(R.string.vnime_settings_key_showsuggestion), showCandidateView);
 		viewCandidate.setMacroEnabled(sp.getBoolean(getString(R.string.vnime_settings_key_macro_enable), true));
 		

@@ -4,6 +4,7 @@
 <string name="vnime_settings_key">vnime_settings_key</string>
 
 <string name="vnime_settings_key_showsoftkeyboard">vnime_settings_key_showsoftkeyboard</string>
+<string name="vnime_settings_key_showsoftkeyboard_always">vnime_settings_key_showsoftkeyboard_always</string>
 <string name="vnime_settings_key_typingmethod">vnime_settings_key_typingmethod</string>
 <string name="vnime_settings_key_autocapsentences">vnime_settings_key_autocapsentences</string>
 
@@ -24,7 +25,9 @@
 <string name="vnime_settings_key_feedback">vnime_settings_key_feedback</string>
 <string name="vnime_settings_key_feedback_visual">vnime_settings_key_feedback_visual</string>
 <string name="vnime_settings_key_feedback_sound">vnime_settings_key_feedback_sound</string>
+<string name="vnime_settings_key_feedback_sound_volume">vnime_settings_key_feedback_sound_volume</string>
 <string name="vnime_settings_key_feedback_vibration">vnime_settings_key_feedback_vibration</string>
+<string name="vnime_settings_key_feedback_vibration_duration">vnime_settings_key_feedback_vibration_duration</string>
 
 <string name="vnime_settings_key_about">vnime_settings_key_about</string>
 
