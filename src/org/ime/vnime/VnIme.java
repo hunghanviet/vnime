@@ -10,6 +10,7 @@ import org.ime.vnime.view.KeyboardManager;
 import org.ime.vnime.view.InputView.CapModes;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
 import android.preference.PreferenceManager;
 import android.view.Display;
@@ -25,6 +26,14 @@ import android.view.inputmethod.EditorInfo;
  *
  */
 public class VnIme extends InputMethodService {
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		
+		/* Invalidate the input view */
+		viewInput.onConfigurationChanged(newConfig);
+	}
 
 	@Override
 	public boolean onEvaluateInputViewShown() {

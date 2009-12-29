@@ -4,12 +4,14 @@
         android:title="@string/app_name"
         android:key="vnime_settings">
 
+	<!--
     <CheckBoxPreference
             android:key="@string/vnime_settings_key_showsoftkeyboard"
             android:title="@string/vnime_settings_showsoftkeyboard"
             android:persistent="true" android:defaultValue="true"
             android:enabled="false"
             />
+    -->
 
     <CheckBoxPreference
             android:key="@string/vnime_settings_key_showsoftkeyboard_always"
@@ -49,6 +51,7 @@
 
     </PreferenceCategory>
 
+	<!--
     <PreferenceCategory
             android:title="@string/vnime_settings_spellcheck"
             android:key="@string/vnime_settings_key_spellcheck">
@@ -70,6 +73,7 @@
             />
 
     </PreferenceCategory>
+    -->
 
     <PreferenceCategory
             android:title="@string/vnime_settings_macro"

@@ -1,4 +1,4 @@
-#10578# This line specify number of words in this dictionary (each word on a separated line)
+#10573# This line specify number of words in this dictionary (each word on a separated line)
 a
 a-ba-giua
 a-ba-toa
@@ -543,7 +543,6 @@ băng-ca
 băng-giô
 băng-rôn
 băng-túp
-băng<sup>o
 băngca
 bĩ
 bĩnh
@@ -1669,7 +1668,6 @@ cảm
 cản
 cảng
 cảnh
-cảnh<i>
 cảo
 cảu
 cảy
@@ -3668,7 +3666,6 @@ kina
 kinacrin
 kinh
 kinh-tế
-kinh<sup>o
 kinin
 kip
 kitô
@@ -5063,7 +5060,6 @@ nghía
 nghít
 nghĩ
 nghĩa
-nghĩa)
 nghĩnh
 nghẹ
 nghẹn
@@ -6780,7 +6776,7 @@ rand
 rang
 ranh
 rao
-rap<i>
+rap
 rau
 ray
 ray-ông
@@ -9109,7 +9105,6 @@ văn
 văng
 văng-tê
 vĩ
-vĩ<sup>o
 vĩnh
 vũ
 vũ-môn
