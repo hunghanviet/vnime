@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.Keyboard.Key;
@@ -22,7 +23,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,19 +31,13 @@ import android.view.inputmethod.InputMethodManager;
 
 public class InputView extends KeyboardView {
 
-    @Override
-    public void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        Log.e("ngnTest", "NewSize = (" + w + ", " + h + "), OldSize = (" + oldw + ", " + oldh + ")");
-    }
-	
 	public enum CapModes {
 		NONE,
 		SENTENCES,
 		WORDS,
 		CHARS,
 	}
-	
+
 	public static final int FEEDBACK_TYPE_VISUAL = 0x1;
 	public static final int FEEDBACK_TYPE_SOUND = 0x2;
 	public static final int FEEDBACK_TYPE_VIBRATION = 0x4;
@@ -57,35 +51,35 @@ public class InputView extends KeyboardView {
 		super(context, attrs);
 		init();
 	}
-	
+
 	public void setKeyEventListener(SoftKeyboardListener listener) {
 		keyEventListener = listener;
 	}
-	
+
 	public void setKeyboardManager(KeyboardManager manager) {
 		if (manager != null)
 			vkbManager = manager;
 		else
 			throw new InvalidParameterException("KeyboardManager must not be null!");
 	}
-	
+
 	public void setAutoCapSentences(boolean autoCap) {
 		autoCapSentences = autoCap;
 	}
-	
+
 	public void setFeedbackType(int types) {
-		
+
 		setPreviewEnabled((types & FEEDBACK_TYPE_VISUAL) != 0);
-		
+
 		feedbackSoundEnabled = (types & FEEDBACK_TYPE_SOUND) != 0;
 		feedbackVibrationEnabled = (types & FEEDBACK_TYPE_VIBRATION) != 0;
 	}
-	
+
 	public void onNewInputTarget(EditorInfo info) {
 		changeKeyboardMode(detectKeyboardMode(info));
-		
+
 		changeShiftState(MetaKeyStates.OFF);
-		
+
 		switch (info.inputType & InputType.TYPE_MASK_CLASS) {
 		case InputType.TYPE_CLASS_TEXT:
 			switch (info.inputType & InputType.TYPE_MASK_FLAGS) {
@@ -105,16 +99,29 @@ public class InputView extends KeyboardView {
 			break;
 		}
 	}
-	
+
+	public void onConfigurationChanged(Configuration newConfig) {
+		/* Temporary solution to update keyboard size */
+		KeyboardModes origMode = currentKeyboardMode;
+		if (currentKeyboardMode != KeyboardModes.PHONE_SYMBOLS) {
+			changeKeyboardMode(KeyboardModes.PHONE_SYMBOLS);
+		} else {
+			changeKeyboardMode(KeyboardModes.PHONE);
+		}
+		changeKeyboardMode(origMode);
+	}
+
 	private void init() {
 		setOnKeyboardActionListener(vkbActionListener);
 	}
-	
+
 	public void updateKeyboardCapMode(CapModes mode) {
-		if (currentKeyboardMode == KeyboardModes.QWERTY) {
+		switch (currentKeyboardMode) {
+		case QWERTY:
+		case QWERTY_NUMBER:
 			switch (capMode) {
 			case NONE:
-				if (autoCapSentences && mode == CapModes.SENTENCES) {
+				if (autoCapSentences && mode == CapModes.SENTENCES && stateShift != MetaKeyStates.LOCK) {
 					changeShiftState(MetaKeyStates.ON);
 				}
 				break;
@@ -130,9 +137,10 @@ public class InputView extends KeyboardView {
 				}
 				break;
 			}
+			break;
 		}
 	}
-	
+
 	private KeyboardModes detectQwertyKeyboardMode() {
 		Context ctx = getContext();
 		KeyboardModes mode = KeyboardModes.QWERTY;
@@ -151,7 +159,7 @@ public class InputView extends KeyboardView {
 		}
 		return mode;
 	}
-	
+
 	private KeyboardModes detectKeyboardMode(EditorInfo info) {
 		KeyboardModes mode = KeyboardModes.QWERTY;
 		if (info != null) {
@@ -168,7 +176,7 @@ public class InputView extends KeyboardView {
 		}
 		return mode;
 	}
-	
+
 	private void changeKeyboardMode(KeyboardModes newMode) {
 		if ((currentKeyboardMode == newMode && currentKeyboardMode != null)
 				|| (newMode == null && currentKeyboardMode == KeyboardModes.QWERTY)) {
@@ -181,20 +189,23 @@ public class InputView extends KeyboardView {
 			currentKeyboardMode = newMode;
 		}
 		setKeyboard(vkbManager.getKeyboard(currentKeyboardMode));
-		
+
+		/* Update SHIFT state */
+		stateShift = null;	/* Force update SHIFT state */
 		switch (currentKeyboardMode) {
 		case QWERTY:
-			setShifted(stateShift != MetaKeyStates.OFF);
+		case QWERTY_NUMBER:
+			changeShiftState(origShiftState);
 			break;
 		case QWERTY_SYMBOLS_SHIFTED:
-			setShifted(true);
+			changeShiftState(MetaKeyStates.LOCK);
 			break;
 		case QWERTY_SYMBOLS:
-			setShifted(false);
+			changeShiftState(MetaKeyStates.OFF);
 			break;
 		}
 	}
-	
+
 	private boolean processShiftKey(KeyEvent event) {
 		switch (event.getKeyCode()) {
 		case KeyEvent.KEYCODE_SHIFT_LEFT:
@@ -227,19 +238,29 @@ public class InputView extends KeyboardView {
 		}
 		return keyEventListener.onKeyDown(event.getKeyCode(), event);
 	}
-	
+
 	private void changeShiftState(MetaKeyStates newState) {
 		if (newState == null)
 			return;
-		
+
 		if (stateShift != newState) {
 			stateShift = newState;
-			
+
+			/* Update original shift state */
+			switch (currentKeyboardMode) {
+			case QWERTY:
+			case QWERTY_NUMBER:
+				origShiftState = stateShift;
+				break;
+			}
+
+			/* Update keyboard view */
 			if (stateShift != MetaKeyStates.OFF)
 				setShifted(true);
 			else
 				setShifted(false);
-	
+
+			/* Update SHIFT key lock state */
 			Keyboard kb = getKeyboard();
 			int shiftKeyIndex = kb.getShiftKeyIndex();
 			if (shiftKeyIndex >= 0) {
@@ -255,20 +276,20 @@ public class InputView extends KeyboardView {
 			}
 		}
 	}
-	
+
 	private boolean processAltKey(KeyEvent event) {
 		switch (event.getKeyCode()) {
 		case KeyEvent.KEYCODE_ALT_LEFT:
 		case KeyEvent.KEYCODE_ALT_RIGHT:
 			switch (stateAlt) {
 			case ON:
-				stateAlt = MetaKeyStates.LOCK;
+				changeAltState(MetaKeyStates.LOCK);
 				break;
 			case LOCK:
-				stateAlt = MetaKeyStates.OFF;
+				changeAltState(MetaKeyStates.OFF);
 				break;
 			case OFF:
-				stateAlt = MetaKeyStates.ON;
+				changeAltState(MetaKeyStates.ON);
 				break;
 			}
 			break;
@@ -277,7 +298,16 @@ public class InputView extends KeyboardView {
 		}
 		return keyEventListener.onKeyDown(event.getKeyCode(), event);
 	}
-	
+
+	private void changeAltState(MetaKeyStates newState) {
+		if (newState == null)
+			return;
+
+		if (newState != stateAlt) {
+			stateAlt = newState;
+		}
+	}
+
 	private boolean processModeChangeKey(KeyEvent event) {
 		switch (event.getKeyCode()) {
 		case VnKeyboard.KEYCODE_MODE_CHANGE:
@@ -285,9 +315,7 @@ public class InputView extends KeyboardView {
 			case QWERTY:
 			case QWERTY_NUMBER:
 				changeKeyboardMode(KeyboardModes.QWERTY_SYMBOLS);
-				if (stateShift == MetaKeyStates.ON)
-					stateShift = MetaKeyStates.OFF;
-				stateAlt = MetaKeyStates.OFF;
+				changeAltState(MetaKeyStates.OFF);
 				break;
 			case QWERTY_SYMBOLS:
 			case QWERTY_SYMBOLS_SHIFTED:
@@ -306,7 +334,7 @@ public class InputView extends KeyboardView {
 		}
 		return keyEventListener.onKeyDown(event.getKeyCode(), event);
 	}
-	
+
 	private boolean processModeChangeKeyLong(KeyEvent event) {
 		switch (event.getKeyCode()) {
 		case VnKeyboard.KEYCODE_MODE_CHANGE:
@@ -380,11 +408,10 @@ public class InputView extends KeyboardView {
 					changeShiftState(MetaKeyStates.OFF);
 				}
 				if (stateAlt == MetaKeyStates.ON)
-					stateAlt = MetaKeyStates.OFF;
+					changeAltState(MetaKeyStates.OFF);
 				return keyEventListener.onKeyDown(keyCode, event);
 			}
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -397,69 +424,70 @@ public class InputView extends KeyboardView {
 		}
 		return super.onLongPress(popupKey);
 	}
-	
+
 	private MetaKeyStates stateAlt = MetaKeyStates.OFF;
 	private MetaKeyStates stateShift = MetaKeyStates.OFF;
-	
+	private MetaKeyStates origShiftState = stateShift;
+
 	private enum MetaKeyStates {
 		OFF,
 		ON,
 		LOCK,
 	}
-	
+
 	private boolean feedbackSoundEnabled = false;
 	private boolean feedbackVibrationEnabled = false;
 	private AudioManager audioManager;
 	private float audioVolumeFeedback = -1.0f;
 	private Vibrator vibrator;
-	private int vibrDurationFeedback = 40;		/* Count in ms */
-	
+	private int vibrDurationFeedback = 40; /* Count in ms */
+
 	private boolean autoCapSentences = true;
 	private CapModes capMode = CapModes.NONE;
-	
+
 	private SoftKeyboardListener keyEventListener;
 	private KeyboardManager vkbManager;
 	private KeyboardModes currentKeyboardMode;
-	
+
 	private OnKeyboardActionListener vkbActionListener = new OnKeyboardActionListener() {
-		
+
 		@Override
 		public void swipeUp() {
-			
+
 		}
-		
+
 		@Override
 		public void swipeRight() {
-			
+
 		}
-		
+
 		@Override
 		public void swipeLeft() {
-			
+
 		}
-		
+
 		@Override
 		public void swipeDown() {
-			
+
 		}
-		
+
 		@Override
 		public void onText(CharSequence text) {
 			keyEventListener.onText(text, TextOrigins.SOFT_KEYBOARD);
 		}
-		
+
 		@Override
 		public void onRelease(int primaryCode) {
-			
+
 		}
-		
+
 		@Override
 		public void onPress(int primaryCode) {
 			keyDownTime = SystemClock.uptimeMillis();
 			repeatCnt = -1;
-			
+
 			Context ctx = getContext();
-			
+
 			/* Sound feedback */
 			if (feedbackSoundEnabled) {
 				if (audioManager == null) {
@@ -467,22 +495,22 @@ public class InputView extends KeyboardView {
 				}
 				/* Check if sound is enabled in current ringer mode */
 				if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-		            int sound = AudioManager.FX_KEYPRESS_STANDARD;
-		            switch (primaryCode) {
-		                case VnKeyboard.KEYCODE_DELETE:
-		                    sound = AudioManager.FX_KEYPRESS_DELETE;
-		                    break;
-		                case VnKeyboard.KEYCODE_ENTER:
-		                    sound = AudioManager.FX_KEYPRESS_RETURN;
-		                    break;
-		                case ' ':
-		                    sound = AudioManager.FX_KEYPRESS_SPACEBAR;
-		                    break;
-		            }
+					int sound = AudioManager.FX_KEYPRESS_STANDARD;
+					switch (primaryCode) {
+					case VnKeyboard.KEYCODE_DELETE:
+						sound = AudioManager.FX_KEYPRESS_DELETE;
+						break;
+					case VnKeyboard.KEYCODE_ENTER:
+						sound = AudioManager.FX_KEYPRESS_RETURN;
+						break;
+					case ' ':
+						sound = AudioManager.FX_KEYPRESS_SPACEBAR;
+						break;
+					}
 					audioManager.playSoundEffect(sound, audioVolumeFeedback);
 				}
 			}
-			
+
 			/* Vibration feedback */
 			if (feedbackVibrationEnabled) {
 				if (vibrator == null) {
@@ -491,13 +519,13 @@ public class InputView extends KeyboardView {
 				vibrator.vibrate(vibrDurationFeedback);
 			}
 		}
-		
+
 		@Override
 		public void onKey(int primaryCode, int[] keyCodes) {
 			KeyEvent event = makeKeyEvent(primaryCode);
 			onKeyDown(event.getKeyCode(), event);
 		}
-		
+
 		private KeyEvent makeKeyEvent(int softKeyCode) {
 			int hardKeyCode = VnKeyboard.softCodeToHardCode(softKeyCode);
 			long eventTime = SystemClock.uptimeMillis();
@@ -510,7 +538,7 @@ public class InputView extends KeyboardView {
 			
 			return new KeyEvent(keyDownTime, eventTime, action, hardKeyCode, repeatCnt, metaState, devId, scanCode, flags);
 		}
-		
+
 		private long keyDownTime = 0;
 		private int repeatCnt = 0;
 	};

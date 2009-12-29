@@ -20,7 +20,7 @@ class SqliteBasedProcessor extends BaseTxtProcessor {
 		try {
 			dbVer = ctx.getPackageManager().getPackageInfo("org.ime.vnime", 0).versionCode;
 		} catch (NameNotFoundException e) {
-			dbVer = 100; /* Supposedly version 1.0 */
+			dbVer = 1000000; /* Supposedly version 1.0-0000 */
 		}
 		dbOpenHelper = new DbOpenHelper(ctx, dbVer);
 	}

@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="fill_parent" android:layout_width="fill_parent"
 	android:gravity="center" android:orientation="vertical">
-	<TextView android:layout_height="wrap_content" android:text="VnIme"
+	<TextView android:layout_height="wrap_content" android:text="@string/pkg_name"
 		android:textStyle="bold" android:textSize="32px" android:textColor="#ffff00"
 		android:layout_width="fill_parent" android:gravity="center"></TextView>
-	<TextView android:layout_height="wrap_content" android:text="Vietnamese IME"
+	<TextView android:layout_height="wrap_content" android:text="@string/svc_name"
 		android:textSize="20px" android:gravity="center" android:layout_width="fill_parent"></TextView>
-	<TextView android:layout_height="wrap_content" android:text="Version 1.0 beta 2"
-		android:layout_width="fill_parent" android:gravity="center"></TextView>
+	<TextView android:layout_height="wrap_content" android:text="Version "
+		android:layout_width="fill_parent" android:gravity="center" android:id="@+id/app_about_txtVersion"></TextView>
 	<TextView android:layout_height="wrap_content" android:text="© 2009 Đỗ Trung Nguyên"
 		android:gravity="center" android:layout_width="fill_parent"></TextView>
 

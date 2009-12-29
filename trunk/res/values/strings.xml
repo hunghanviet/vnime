@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
+	<string name="pkg_name">VnIme</string>
     <string name="app_name">Vietnamese IME Settings</string>
 	<string name="svc_name">Vietnamese IME</string>
 	<string name="ime_title">Input Methods</string>
-	
-<string name="modifiers_telex">zfsrxjwadeoww</string>
+	<string name="modifiers_telex">zfsrxjwadeoww</string>
+
 </resources>
