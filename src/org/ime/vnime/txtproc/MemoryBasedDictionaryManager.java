@@ -20,7 +20,7 @@ class MemoryBasedDictionaryManager implements DictionaryManager {
 	}
 
 	private void loadDictionary(Context ctx) {
-		InputStream is = ctx.getResources().openRawResource(org.ime.vnime.R.raw.wordlist74k_lowercase_single_raw);
+		InputStream is = ctx.getResources().openRawResource(org.ime.vnime.R.raw.wordlist74k_lowercase_single_reduced_statistic);
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
 		try {
@@ -34,10 +34,13 @@ class MemoryBasedDictionaryManager implements DictionaryManager {
 			int size = Integer.parseInt(line.substring(i, j));
 			
 			dictSingleWords = new String[size];
+			dictSingleWordsFreq = new int[size];
 			
 			i = 0;
 			while ((line = br.readLine()) != null && i < size) {
-				dictSingleWords[i] = line;
+				int index = line.indexOf(",");
+				dictSingleWords[i] = line.substring(0, index);
+				dictSingleWordsFreq[i] = Integer.parseInt(line.substring(index + 1));
 				i++;
 			}
 			
@@ -119,6 +122,7 @@ class MemoryBasedDictionaryManager implements DictionaryManager {
 		}
 		
 		int count = result.size();
+		
 		if (count < maxCount) {
 			maxCount -= count;
 			Vector<String> standardDictResult = getCandidatesFromStandardDict(prefix, suffix, maxCount);
@@ -128,14 +132,11 @@ class MemoryBasedDictionaryManager implements DictionaryManager {
 			}
 		}
 		
-		count = result.size();
+		/* Remove the words that's identical to 'prefix' + 'suffix' */
+		String wholeWord = (prefix + suffix).toLowerCase();
+		while (result.remove(wholeWord));
 		
-		if (count > 0) {
-			if (result.get(0).equals(prefix.toLowerCase() + suffix.toLowerCase())) {
-				result.remove(0);
-				count--;
-			}
-		}
+		count = result.size();
 		
 		if (count > 0) {
 			int firstUpper = -1;
@@ -203,6 +204,7 @@ class MemoryBasedDictionaryManager implements DictionaryManager {
 	
 	private Vector<String> getCandidatesFromStandardDict(String prefix, String suffix, int maxCount) {
 		Vector<String> result = new Vector<String>();
+		Vector<Integer> resultFreq = new Vector<Integer>();
 
 		prefix = prefix.toLowerCase();
 		suffix = suffix.toLowerCase();
@@ -243,15 +245,64 @@ class MemoryBasedDictionaryManager implements DictionaryManager {
 				for (int i = begin; i <= end && count < maxCount; i++) {
 					if (dictSingleWords[i].endsWith(suffix)) {
 						result.add(dictSingleWords[i]);
+						resultFreq.add(new Integer(dictSingleWordsFreq[i]));
 						count++;
 					}
 				}
 			} else {
 				for (int i = begin; i <= end && count < maxCount; i++) {
 					result.add(dictSingleWords[i]);
+					resultFreq.add(new Integer(dictSingleWordsFreq[i]));
 					count++;
 				}
 			}
+		}
+		
+		String[] arString = new String[result.size()];
+		int[] arInt = new int[resultFreq.size()];
+		int i = 0;
+		Iterator<String> itrtString = result.iterator();
+		while (itrtString.hasNext()) {
+			arString[i] = itrtString.next();
+			i++;
+		}
+		i = 0;
+		Iterator<Integer> itrtInteger = resultFreq.iterator();
+		while (itrtInteger.hasNext()) {
+			arInt[i] = itrtInteger.next();
+			i++;
+		}
+		
+		return sortWordsByFrequency(arString, arInt);
+	}
+	
+	private Vector<String> sortWordsByFrequency(String[] words, int[] freq) {
+		Vector<String> result = new Vector<String>(words.length);
+		
+		boolean swapped = true;
+		int j = 0;
+		String sTmp;
+		int iTmp;
+		while (swapped) {
+			swapped = false;
+			j++;
+			for (int i = 0; i < words.length - j; i++) {
+				if (freq[i] < freq[i + 1]) {
+					sTmp = words[i];
+					words[i] = words[i + 1];
+					words[i + 1] = sTmp;
+					
+					iTmp = freq[i];
+					freq[i] = freq[i + 1];
+					freq[i + 1] = iTmp;
+					
+					swapped = true;
+				}
+			}
+		}
+
+		for (int i = 0; i < words.length; i++) {
+			result.add(words[i]);
 		}
 		
 		return result;
@@ -259,4 +310,5 @@ class MemoryBasedDictionaryManager implements DictionaryManager {
 
 	private UserDbOpenHelper userDbOpenHelper;
 	private String[] dictSingleWords;
+	private int[] dictSingleWordsFreq;
 }

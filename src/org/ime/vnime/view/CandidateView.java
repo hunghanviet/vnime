@@ -41,24 +41,18 @@ public class CandidateView extends LinearLayout {
 	public void updateCandidateList(String seed) {
 		clearContent();
 		
-		int candidateViewWidth = getWidth();
-		
 		if (macroEnabled) {
 			String macroValue = macroManager.expandMacro(seed, true);
 			if (macroValue != null && macroValue.length() > 0) {
 				macroResult.setText(macroValue);
-				addView(macroResult);
-				candidateViewWidth -= macroResult.getWidth();
+				layContainer.addView(macroResult);
 			}
 		}
-		
-		if (candidateViewWidth <= 0)
-			return;
 		
 		String[] words = dictManager.getCandidates(seed, null, MAX_SEARCH_RESULT);
 		int i = 0;
 		if (words != null && words.length > 0) {
-			while (candidateViewWidth > 0 && i < words.length) {
+			while (i < words.length) {
 				TextView txtWord = new TextView(getContext());
 				txtWord.setTextColor(getContext().getResources().getColor(R.color.svc_candidate_foreground));
 				txtWord.setBackgroundResource(R.drawable.img_candidate_item_background);
@@ -66,24 +60,28 @@ public class CandidateView extends LinearLayout {
 				txtWord.setLines(1);
 				txtWord.setOnClickListener(itemClickListener);
 				txtWord.setText(words[i]);
-				addView(txtWord);
+				layContainer.addView(txtWord);
 				i++;
-				candidateViewWidth -= txtWord.getWidth();
 			}
 		}
 	}
 	
 	private void clearContent() {
+		if (layContainer == null) {
+			layContainer = (LinearLayout) findViewById(R.id.candidate_layContainer);
+		}
+		
 		if (macroResult == null) {
-			macroResult = (TextView) findViewWithTag("txtMacro");
+			macroResult = (TextView) layContainer.findViewWithTag("txtMacro");
 			macroResult.setOnClickListener(itemClickListener);
 		}
+		
 		if (dictResult == null) {
-			dictResult = (TextView) findViewWithTag("txtWord");
+			dictResult = (TextView) layContainer.findViewWithTag("txtWord");
 			dictResult.setOnClickListener(itemClickListener);
 		}
 
-		removeAllViews();
+		layContainer.removeAllViews();
 	}
 	
 	private OnClickListener itemClickListener = new OnClickListener() {
@@ -103,6 +101,7 @@ public class CandidateView extends LinearLayout {
 	
 	private TextView macroResult;
 	private TextView dictResult;
+	private LinearLayout layContainer;
 
 	private static final int MAX_SEARCH_RESULT = 10;
 }
