@@ -34,6 +34,12 @@
             android:persistent="true" android:defaultValue="true"
             />
 
+    <CheckBoxPreference
+            android:key="@string/vnime_settings_key_alwaysshownumber"
+            android:title="@string/vnime_settings_alwaysshownumber"
+            android:persistent="true" android:defaultValue="false"
+            />
+
     <PreferenceCategory
             android:title="@string/vnime_settings_suggestion"
             android:key="@string/vnime_settings_key_suggestion">

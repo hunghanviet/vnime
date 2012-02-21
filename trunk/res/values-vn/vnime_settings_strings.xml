@@ -7,6 +7,7 @@
 <string name="vnime_settings_typingmethod">Chọn bộ gõ</string>
 <string name="vnime_settings_typingmethod_summary">"Bộ gõ hiện tại: "</string>
 <string name="vnime_settings_autocapsentences">Viết hoa chữ đầu câu</string>
+<string name="vnime_settings_alwaysshownumber">Luôn hiển thị phím số</string>
 
 <string name="vnime_settings_suggestion">Dự đoán từ</string>
 <string name="vnime_settings_showsuggestion">Hiển thị các từ dự đoán</string>

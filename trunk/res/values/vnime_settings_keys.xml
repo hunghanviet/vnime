@@ -7,6 +7,7 @@
 <string name="vnime_settings_key_showsoftkeyboard_always">vnime_settings_key_showsoftkeyboard_always</string>
 <string name="vnime_settings_key_typingmethod">vnime_settings_key_typingmethod</string>
 <string name="vnime_settings_key_autocapsentences">vnime_settings_key_autocapsentences</string>
+<string name="vnime_settings_key_alwaysshownumber">vnime_settings_key_alwaysshownumber</string>
 
 <string name="vnime_settings_key_suggestion">vnime_settings_key_suggestion</string>
 <string name="vnime_settings_key_showsuggestion">vnime_settings_key_showsuggestion</string>

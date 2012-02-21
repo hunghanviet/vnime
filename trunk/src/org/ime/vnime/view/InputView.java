@@ -67,6 +67,10 @@ public class InputView extends KeyboardView {
 		autoCapSentences = autoCap;
 	}
 
+	public void setAlwaysShowNumKeys(boolean show) {
+		alwaysShowNumKeys = show;
+	}
+
 	public void setFeedbackType(int types) {
 
 		setPreviewEnabled((types & FEEDBACK_TYPE_VISUAL) != 0);
@@ -123,17 +127,20 @@ public class InputView extends KeyboardView {
 			case NONE:
 				if (autoCapSentences && mode == CapModes.SENTENCES && stateShift != MetaKeyStates.LOCK) {
 					changeShiftState(MetaKeyStates.ON);
+					inAutoCapMode = true;
 				}
 				break;
 			case SENTENCES:
 			case WORDS:
 				if (capMode == mode && stateShift != MetaKeyStates.LOCK) {
 					changeShiftState(MetaKeyStates.ON);
+					inAutoCapMode = true;
 				}
 				break;
 			case CHARS:
 				if (capMode == mode) {
 					changeShiftState(MetaKeyStates.LOCK);
+					inAutoCapMode = true;
 				}
 				break;
 			}
@@ -142,18 +149,22 @@ public class InputView extends KeyboardView {
 	}
 
 	private KeyboardModes detectQwertyKeyboardMode() {
-		Context ctx = getContext();
 		KeyboardModes mode = KeyboardModes.QWERTY;
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String modifiers = sp.getString(ctx.getString(R.string.vnime_settings_key_typingmethod), null);
-		if (modifiers != null) {
-			int len = modifiers.length();
-			char ch;
-			for (int i = 0; i < len; i++) {
-				ch = modifiers.charAt(i);
-				if (ch >= '0' && ch <= '9') {
-					mode = KeyboardModes.QWERTY_NUMBER;
-					break;
+		if (alwaysShowNumKeys) {
+			mode = KeyboardModes.QWERTY_NUMBER;
+		} else {
+			Context ctx = getContext();
+			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+			String modifiers = sp.getString(ctx.getString(R.string.vnime_settings_key_typingmethod), null);
+			if (modifiers != null) {
+				int len = modifiers.length();
+				char ch;
+				for (int i = 0; i < len; i++) {
+					ch = modifiers.charAt(i);
+					if (ch >= '0' && ch <= '9') {
+						mode = KeyboardModes.QWERTY_NUMBER;
+						break;
+					}
 				}
 			}
 		}
@@ -236,7 +247,7 @@ public class InputView extends KeyboardView {
 		default:
 			break;
 		}
-		return keyEventListener.onKeyDown(event.getKeyCode(), event);
+		return (keyEventListener != null) ? keyEventListener.onKeyDown(event.getKeyCode(), event): false;
 	}
 
 	private void changeShiftState(MetaKeyStates newState) {
@@ -259,6 +270,8 @@ public class InputView extends KeyboardView {
 				setShifted(true);
 			else
 				setShifted(false);
+			
+			inAutoCapMode = false;
 
 			/* Update SHIFT key lock state */
 			Keyboard kb = getKeyboard();
@@ -296,7 +309,7 @@ public class InputView extends KeyboardView {
 		default:
 			break;
 		}
-		return keyEventListener.onKeyDown(event.getKeyCode(), event);
+		return (keyEventListener != null) ? keyEventListener.onKeyDown(event.getKeyCode(), event): false;
 	}
 
 	private void changeAltState(MetaKeyStates newState) {
@@ -332,55 +345,58 @@ public class InputView extends KeyboardView {
 		default:
 			break;
 		}
-		return keyEventListener.onKeyDown(event.getKeyCode(), event);
+		return (keyEventListener != null) ? keyEventListener.onKeyDown(event.getKeyCode(), event): false;
 	}
 
 	private boolean processModeChangeKeyLong(KeyEvent event) {
 		switch (event.getKeyCode()) {
 		case VnKeyboard.KEYCODE_MODE_CHANGE:
-			Context ctx = getContext();
-	        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-	        builder.setTitle(R.string.svc_name);
-	        builder.setIcon(R.drawable.sym_keyboard_mode);
-	        builder.setCancelable(true);
-	        builder.setNegativeButton(android.R.string.cancel, null);
-	        CharSequence itemSettings = ctx.getString(org.ime.vnime.R.string.app_name);
-	        CharSequence itemInputMethod = ctx.getString(org.ime.vnime.R.string.ime_title);
-	        builder.setItems(new CharSequence[] {itemSettings, itemInputMethod},
-	                new DialogInterface.OnClickListener() {
-
-	            public void onClick(DialogInterface di, int position) {
-	                di.dismiss();
-	    			Context ctx = getContext();
-	                switch (position) {
-	                    case ITEM_POSITION_SETTINGS:
-	                        Intent intent = new Intent();
-	                        intent.setClass(ctx, VnImeSettings.class);
-	                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	                        ctx.startActivity(intent);
-	                        break;
-	                    case ITEM_POSITION_IME:
-	                        ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
-	                        break;
-	                }
-	            }
-	            
-	            private static final int ITEM_POSITION_SETTINGS = 0;
-	            private static final int ITEM_POSITION_IME = 1;
-	        });
-	        
-	        AlertDialog mOptionsDialog = builder.create();
-	        Window window = mOptionsDialog.getWindow();
-	        WindowManager.LayoutParams lp = window.getAttributes();
-	        lp.token = getWindowToken();
-	        lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
-	        window.setAttributes(lp);
-	        window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-	        mOptionsDialog.show();
-			
+			showModeChangeMenu();
 			return true;
 		}
 		return false;
+	}
+	
+	private void showModeChangeMenu() {
+		Context ctx = getContext();
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(R.string.svc_name);
+        builder.setIcon(R.drawable.sym_keyboard_mode);
+        builder.setCancelable(true);
+        builder.setNegativeButton(android.R.string.cancel, null);
+        CharSequence itemSettings = ctx.getString(org.ime.vnime.R.string.app_name);
+        CharSequence itemInputMethod = ctx.getString(org.ime.vnime.R.string.ime_title);
+        builder.setItems(new CharSequence[] {itemSettings, itemInputMethod},
+                new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface di, int position) {
+                di.dismiss();
+    			Context ctx = getContext();
+                switch (position) {
+                    case ITEM_POSITION_SETTINGS:
+                        Intent intent = new Intent();
+                        intent.setClass(ctx, VnImeSettings.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        ctx.startActivity(intent);
+                        break;
+                    case ITEM_POSITION_IME:
+                        ((InputMethodManager)ctx.getSystemService(Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
+                        break;
+                }
+            }
+            
+            private static final int ITEM_POSITION_SETTINGS = 0;
+            private static final int ITEM_POSITION_IME = 1;
+        });
+        
+        AlertDialog mOptionsDialog = builder.create();
+        Window window = mOptionsDialog.getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.token = getWindowToken();
+        lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
+        window.setAttributes(lp);
+        window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        mOptionsDialog.show();
 	}
 
 	@Override
@@ -397,8 +413,10 @@ public class InputView extends KeyboardView {
 				return processModeChangeKey(event);
 			default:
 				int metaState = event.getMetaState();
-				if (stateShift == MetaKeyStates.ON || stateShift == MetaKeyStates.LOCK)
-					metaState |= KeyEvent.META_SHIFT_ON;
+				if (!inAutoCapMode || (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z)) {
+					if (stateShift == MetaKeyStates.ON || stateShift == MetaKeyStates.LOCK)
+						metaState |= KeyEvent.META_SHIFT_ON;
+				}
 				if (stateAlt == MetaKeyStates.ON || stateAlt == MetaKeyStates.LOCK)
 					metaState |= KeyEvent.META_ALT_ON;
 				event = new KeyEvent(event.getDownTime(), event.getEventTime(), event.getAction(),
@@ -414,6 +432,11 @@ public class InputView extends KeyboardView {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		return (keyEventListener != null) ? keyEventListener.onKeyUp(keyCode, event) : false;
 	}
 
 	@Override
@@ -442,8 +465,10 @@ public class InputView extends KeyboardView {
 	private Vibrator vibrator;
 	private int vibrDurationFeedback = 40; /* Count in ms */
 
+	private boolean alwaysShowNumKeys = false;
 	private boolean autoCapSentences = true;
 	private CapModes capMode = CapModes.NONE;
+	private boolean inAutoCapMode = false;
 
 	private SoftKeyboardListener keyEventListener;
 	private KeyboardManager vkbManager;
@@ -522,14 +547,18 @@ public class InputView extends KeyboardView {
 
 		@Override
 		public void onKey(int primaryCode, int[] keyCodes) {
-			KeyEvent event = makeKeyEvent(primaryCode);
+			KeyEvent event = makeKeyEvent(primaryCode, KeyEvent.ACTION_DOWN);
 			onKeyDown(event.getKeyCode(), event);
+			
+			event = makeKeyEvent(primaryCode, KeyEvent.ACTION_UP);
+			onKeyUp(event.getKeyCode(), event);
 		}
 
-		private KeyEvent makeKeyEvent(int softKeyCode) {
+		private KeyEvent makeKeyEvent(int softKeyCode, int action) {
 			int hardKeyCode = VnKeyboard.softCodeToHardCode(softKeyCode);
 			long eventTime = SystemClock.uptimeMillis();
-			int action = KeyEvent.ACTION_DOWN;
+			if (action != KeyEvent.ACTION_DOWN && action != KeyEvent.ACTION_UP && action != KeyEvent.ACTION_MULTIPLE)
+				action = KeyEvent.ACTION_DOWN;
 			repeatCnt++;
 			int metaState = 0;
 			int devId = 0;

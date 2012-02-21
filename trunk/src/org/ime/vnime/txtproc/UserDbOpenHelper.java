@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class UserDbOpenHelper extends SQLiteOpenHelper {
 	
-	private static final String dbName = "userdb.sqlite";
+	public static final String dbName = "userdb.sqlite";
 	
 	private static UserDbOpenHelper theInstance;
 	
@@ -20,7 +20,7 @@ public class UserDbOpenHelper extends SQLiteOpenHelper {
 
 			int dbVer;
 			try {
-				dbVer = ctx.getPackageManager().getPackageInfo("org.ime.vnime", 0).versionCode;
+				dbVer = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionCode;
 			} catch (NameNotFoundException e) {
 				dbVer = 1000000; /* Supposedly version 1.0-0000 */
 			}

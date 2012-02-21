@@ -102,16 +102,19 @@ public class VnIme extends InputMethodService {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (super.onKeyDown(keyCode, event))
-				return true;
-			else
-				return viewInput.onKeyDown(keyCode, event);
+			return super.onKeyDown(keyCode, event) ? true : viewInput.onKeyDown(keyCode, event);
 		}
-		if (viewInput.onKeyDown(keyCode, event)) {
-			return true;
-		} else {
-			return super.onKeyDown(keyCode, event);
+		
+		return viewInput.onKeyDown(keyCode, event) ? true : super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			return super.onKeyUp(keyCode, event) ? true : viewInput.onKeyUp(keyCode, event);
 		}
+		
+		return viewInput.onKeyUp(keyCode, event) ? true : super.onKeyUp(keyCode, event);
 	}
 	
 	private static final int MAX_OCCUPIED_SCREEN = 75;    /* In percentage */
@@ -144,14 +147,15 @@ public class VnIme extends InputMethodService {
 		viewCandidate.setMacroEnabled(sp.getBoolean(getString(R.string.vnime_settings_key_macro_enable), true));
 		
 		viewInput.setAutoCapSentences(sp.getBoolean(getString(R.string.vnime_settings_key_autocapsentences), true));
+		viewInput.setAlwaysShowNumKeys(sp.getBoolean(getString(R.string.vnime_settings_key_alwaysshownumber), false));
 		int feedbackType = 0;
 		if (sp.getBoolean(getString(R.string.vnime_settings_key_feedback_visual), true)) {
 			feedbackType |= InputView.FEEDBACK_TYPE_VISUAL;
 		}
-		if (sp.getBoolean(getString(R.string.vnime_settings_key_feedback_sound), true)) {
+		if (sp.getBoolean(getString(R.string.vnime_settings_key_feedback_sound), false)) {
 			feedbackType |= InputView.FEEDBACK_TYPE_SOUND;
 		}
-		if (sp.getBoolean(getString(R.string.vnime_settings_key_feedback_vibration), true)) {
+		if (sp.getBoolean(getString(R.string.vnime_settings_key_feedback_vibration), false)) {
 			feedbackType |= InputView.FEEDBACK_TYPE_VIBRATION;
 		}
 		viewInput.setFeedbackType(feedbackType);

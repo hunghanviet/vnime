@@ -52,7 +52,6 @@ public class DefaultConnectionManager implements ConnectionManager {
 	
 	private TxtProcessor txtProcessor;
 	private Word currentWord;
-	private int textLen;
 	private boolean inDirtyState = true;
 	
 	private String revertBuffer = "";
@@ -80,10 +79,11 @@ public class DefaultConnectionManager implements ConnectionManager {
 								if (i < len - 1) {
 									/* There is at least one whitespace before the cursor */
 									textChangedListener.onNewWord();
-								}
-								if (txtProcessor.isPunctuation(ch)) {
-									/* We're starting a new sentence */
-									textChangedListener.onNewSentence();
+									
+									if (txtProcessor.isPunctuation(ch)) {
+										/* We're starting a new sentence */
+										textChangedListener.onNewSentence();
+									}
 								}
 								break;
 							}
@@ -207,6 +207,7 @@ public class DefaultConnectionManager implements ConnectionManager {
 			onText(revertBuffer + c, TextOrigins.SELF_PRODUCE);
 		} else {
 			/* If nothing special happened, simply put the char in */
+			connection.finishComposingText();
 			connection.commitText("" + c, 1);
 		}
 
@@ -240,18 +241,14 @@ public class DefaultConnectionManager implements ConnectionManager {
 					currentWord.putChar(c, -1);
 				}
 				
-				String newText = currentWord.toString();
-				connection.deleteSurroundingText(textLen, 0);
-				connection.commitText(newText, 1);
-				textLen = newText.length();
+				connection.setComposingText(currentWord.toString(), 1);
 				revertBuffer += c;
 			} else {
 				if (txtProcessor.isWordDelimiter(c)) {
 					processDelimiter(c);
 				} else {
 					currentWord.putChar(c, -1);
-					connection.commitText("" + c, 1);
-					textLen++;
+					connection.setComposingText(currentWord.toString(), 1);
 					revertBuffer += c;
 				}
 			}
@@ -265,6 +262,9 @@ public class DefaultConnectionManager implements ConnectionManager {
 			case KeyEvent.KEYCODE_SHIFT_RIGHT:
 			case KeyEvent.KEYCODE_ALT_LEFT:
 			case KeyEvent.KEYCODE_ALT_RIGHT:
+				if (connection != null) {
+					connection.sendKeyEvent(event);
+				}
 				return true;
 			default:
 				inDirtyState = true;
@@ -289,7 +289,18 @@ public class DefaultConnectionManager implements ConnectionManager {
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		return false;
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_SHIFT_LEFT:
+		case KeyEvent.KEYCODE_SHIFT_RIGHT:
+		case KeyEvent.KEYCODE_ALT_LEFT:
+		case KeyEvent.KEYCODE_ALT_RIGHT:
+			if (connection != null) {
+				connection.sendKeyEvent(event);
+			}
+			return true;
+		default:
+			return false;
+		}
 	}
 	
 	private String getCurrentText() {
@@ -316,8 +327,12 @@ public class DefaultConnectionManager implements ConnectionManager {
 	
 	private void resetState() {
 		String text = getCurrentText();
-		textLen = text.length();
+		int len = text.length();
 		currentWord = new Word(txtProcessor, text);
+		if (connection != null && len > 0) {
+			connection.deleteSurroundingText(len, 0);
+			connection.setComposingText(text, 1);
+		}
 		inDirtyState = false;
 		revertBuffer = text;
 	}
@@ -366,20 +381,19 @@ public class DefaultConnectionManager implements ConnectionManager {
 			return false;
 		case CANDIDATE_VIEW:
 			if (connection != null) {
-				String curText = getCurrentText();
-				int curLen = curText.length();
-				connection.deleteSurroundingText(curLen, 0);
-				connection.commitText(text + " ", 1);
+				if (inDirtyState) {
+					resetState();
+				}
+				connection.setComposingText(text + " ", 1);
+				connection.finishComposingText();
 				inDirtyState = true;
 				notifyTextChanged();
 			}
 			return true;
 		case SELF_PRODUCE:
 			if (connection != null) {
-				String curText = getCurrentText();
-				int curLen = curText.length();
-				connection.deleteSurroundingText(curLen, 0);
-				connection.commitText(text, 1);
+				connection.setComposingText(text, 1);
+				connection.finishComposingText();
 				inDirtyState = true;
 				notifyTextChanged();
 			}
