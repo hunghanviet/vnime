@@ -138,7 +138,7 @@ public class InputView extends KeyboardView {
 				}
 				break;
 			case CHARS:
-				if (capMode == mode) {
+				if (capMode == mode && stateShift != MetaKeyStates.LOCK) {
 					changeShiftState(MetaKeyStates.LOCK);
 					inAutoCapMode = true;
 				}
@@ -251,10 +251,7 @@ public class InputView extends KeyboardView {
 	}
 
 	private void changeShiftState(MetaKeyStates newState) {
-		if (newState == null)
-			return;
-
-		if (stateShift != newState) {
+		if (newState != stateShift && newState != null) {
 			stateShift = newState;
 
 			/* Update original shift state */
