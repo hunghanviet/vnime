@@ -9,6 +9,7 @@ import org.ime.vnime.txtproc.TxtProcessor;
 import org.ime.vnime.txtproc.Word;
 import org.ime.vnime.txtproc.TxtProcessor.Marks;
 import org.ime.vnime.txtproc.TxtProcessor.Tones;
+import org.ime.vnime.view.VnKeyboard;
 
 import android.content.Context;
 import android.os.Handler;
@@ -258,12 +259,25 @@ public class DefaultConnectionManager implements ConnectionManager {
 			return true;
 		} else {
 			switch (keyCode) {
+			case VnKeyboard.KEYCODE_MODE_CHANGE:
+				return true;
 			case KeyEvent.KEYCODE_SHIFT_LEFT:
 			case KeyEvent.KEYCODE_SHIFT_RIGHT:
 			case KeyEvent.KEYCODE_ALT_LEFT:
 			case KeyEvent.KEYCODE_ALT_RIGHT:
+				/* Do nothing */
+				return true;
+			case KeyEvent.KEYCODE_DEL:
+				String text = currentWord.toString();
+				int len = 0;
+				if (text != null && (len = text.length()) > 0) {
+					currentWord = new Word(txtProcessor, text.substring(0, len - 1));
+				} else {
+					currentWord = new Word(txtProcessor);
+				}
 				if (connection != null) {
 					connection.sendKeyEvent(event);
+					notifyTextChanged();
 				}
 				return true;
 			default:
@@ -294,9 +308,7 @@ public class DefaultConnectionManager implements ConnectionManager {
 		case KeyEvent.KEYCODE_SHIFT_RIGHT:
 		case KeyEvent.KEYCODE_ALT_LEFT:
 		case KeyEvent.KEYCODE_ALT_RIGHT:
-			if (connection != null) {
-				connection.sendKeyEvent(event);
-			}
+			/* Do nothing */
 			return true;
 		default:
 			return false;
